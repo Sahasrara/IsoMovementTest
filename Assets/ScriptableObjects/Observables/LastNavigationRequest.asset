@@ -9,7 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76731a58638800748bc12b59f67d06c3, type: 3}
+  m_Script: {fileID: 11500000, guid: 56b62ce9c13d5d0489a285ef80151366, type: 3}
   m_Name: LastNavigationRequest
   m_EditorClassIdentifier: 
   m_DeveloperNotes: 
+  m_Value:
+    Position: {x: 0, y: 0, z: 0}
+    Rotation: {x: 0, y: 0, z: 0, w: 0}

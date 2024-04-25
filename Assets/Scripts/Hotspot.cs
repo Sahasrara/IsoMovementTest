@@ -26,7 +26,7 @@ namespace Techno
         private Collider m_InteractionBoundary;
 
         [SerializeField]
-        private ObservableVariableVector3 m_LastNavigationRequest;
+        private ObservableVariablePositionAndRotation m_LastNavigationRequest;
 
         [SerializeField]
         private ActionBase[] m_ActionList;
@@ -35,7 +35,11 @@ namespace Techno
         #region Event System Events
         public void OnPointerClick(PointerEventData eventData)
         {
-            m_LastNavigationRequest.Value = m_ApproachMarker.transform.position;
+            Debug.Log("HOTSPOT");
+            PositionAndRotation positionAndRotation = new();
+            positionAndRotation.Position = m_ApproachMarker.transform.position;
+            positionAndRotation.Rotation = m_ApproachMarker.transform.rotation;
+            m_LastNavigationRequest.Value = positionAndRotation;
 
             // TODO
             // Add in direction to this observable

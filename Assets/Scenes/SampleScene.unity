@@ -1966,7 +1966,7 @@ MonoBehaviour:
   m_ApproachMarker: {fileID: 1201867644}
   m_IsHotspotActive: {fileID: 0}
   m_InteractionBoundary: {fileID: 0}
-  m_LastNavigationRequest: {fileID: 11400000, guid: b61b8b2a4dee1e645b55e5ab6d1e2b0f,
+  m_LastNavigationRequest: {fileID: 11400000, guid: 87db230cbba782b4cb24aa9cd6e3cc43,
     type: 2}
 --- !u!1 &982888807
 GameObject:
@@ -2411,7 +2411,7 @@ PrefabInstance:
     - target: {fileID: 3021434395612321014, guid: cc18a20ecf896994fbfe2d73aca008cf,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.96592593
+      value: 0.0000029504295
       objectReference: {fileID: 0}
     - target: {fileID: 3021434395612321014, guid: cc18a20ecf896994fbfe2d73aca008cf,
         type: 3}
@@ -2421,7 +2421,7 @@ PrefabInstance:
     - target: {fileID: 3021434395612321014, guid: cc18a20ecf896994fbfe2d73aca008cf,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.2588186
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3021434395612321014, guid: cc18a20ecf896994fbfe2d73aca008cf,
         type: 3}
@@ -2436,7 +2436,7 @@ PrefabInstance:
     - target: {fileID: 3021434395612321014, guid: cc18a20ecf896994fbfe2d73aca008cf,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -30
+      value: 180
       objectReference: {fileID: 0}
     - target: {fileID: 3021434395612321014, guid: cc18a20ecf896994fbfe2d73aca008cf,
         type: 3}
@@ -3885,10 +3885,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4693643201283245239, guid: ae1c0278e1f85e9448c86b24ed96601e,
+        type: 3}
+      propertyPath: m_Acceleration
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 6420861229494694443, guid: ae1c0278e1f85e9448c86b24ed96601e,
         type: 3}
       propertyPath: m_Name
       value: Chad
+      objectReference: {fileID: 0}
+    - target: {fileID: 6904797779092243141, guid: ae1c0278e1f85e9448c86b24ed96601e,
+        type: 3}
+      propertyPath: m_TurnSpeed
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6904797779092243141, guid: ae1c0278e1f85e9448c86b24ed96601e,
         type: 3}
@@ -3899,7 +3909,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LastNavigationRequest
       value: 
-      objectReference: {fileID: 11400000, guid: b61b8b2a4dee1e645b55e5ab6d1e2b0f,
+      objectReference: {fileID: 11400000, guid: 87db230cbba782b4cb24aa9cd6e3cc43,
         type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

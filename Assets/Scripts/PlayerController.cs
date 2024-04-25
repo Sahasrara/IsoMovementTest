@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -16,10 +17,17 @@ namespace Techno
         private Animator m_Animator;
 
         [SerializeField]
-        private ObservableVariableVector3 m_LastNavigationRequest;
+        private float m_TurnSpeed = 0.1f;
+
+        [SerializeField]
+        private ObservableVariablePositionAndRotation m_LastNavigationRequest;
         #endregion
 
         #region State
+        private NavAgentState m_NavState = NavAgentState.Idle;
+        private bool m_PathPending;
+        private bool m_PathRunning;
+        private PositionAndRotation m_LastDestination;
         #endregion
 
         #region Unity Lifecycle Methods
@@ -48,6 +56,35 @@ namespace Techno
             //         m_Agent.SetDestination(hit.point);
             //     }
             // }
+
+            // Update Agent State
+            switch (m_NavState)
+            {
+                case NavAgentState.Calculating:
+                    if (!m_Agent.pathPending)
+                    {
+                        if (m_Agent.pathStatus == NavMeshPathStatus.PathComplete)
+                        {
+                            m_NavState = NavAgentState.Running;
+                            goto case NavAgentState.Running;
+                        }
+                        else
+                        {
+                            // Failed
+                            m_NavState = NavAgentState.Idle;
+                        }
+                    }
+                    break;
+                case NavAgentState.Running:
+                    if (!m_Agent.hasPath)
+                    {
+                        if (m_Agent.remainingDistance == 0)
+                        {
+                            TurnOnArrive().Forget();
+                        }
+                    }
+                    break;
+            }
 
             // Update Animation
             if (!Mathf.Approximately(0, m_Agent.velocity.magnitude))
@@ -91,8 +128,54 @@ namespace Techno
         #region Helpers
         private void OnNavigationRequest()
         {
-            m_Agent.SetDestination(m_LastNavigationRequest.Value);
+            m_LastDestination = m_LastNavigationRequest.Value;
+            if (m_LastDestination.Position != transform.position)
+            {
+                m_Agent.SetDestination(m_LastDestination.Position);
+                m_NavState = NavAgentState.Calculating;
+            }
+            // TODO = don't use identity checks
+            else if (m_LastDestination.Rotation != transform.rotation)
+            {
+                TurnOnArrive().Forget();
+            }
+        }
+
+        private async UniTaskVoid TurnOnArrive()
+        {
+            Debug.Log("ROTATING");
+            m_NavState = NavAgentState.Turning;
+            if (m_LastDestination.Rotation == Quaternion.identity)
+            {
+                m_NavState = NavAgentState.Idle;
+                return;
+            }
+            float timeCount = 0.0f;
+            float normalizedProgress;
+            Quaternion startRotation = transform.rotation;
+            do
+            {
+                normalizedProgress = timeCount * m_TurnSpeed;
+                transform.rotation = Quaternion.Slerp(
+                    startRotation,
+                    m_LastDestination.Rotation,
+                    normalizedProgress
+                );
+                await UniTask.Yield(PlayerLoopTiming.Update);
+                if (m_NavState != NavAgentState.Turning)
+                    return;
+                timeCount += Time.deltaTime;
+            } while (normalizedProgress < 1);
+            m_NavState = NavAgentState.Idle;
         }
         #endregion
+
+        private enum NavAgentState
+        {
+            Idle,
+            Calculating,
+            Running,
+            Turning,
+        }
     }
 }

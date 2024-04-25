@@ -7,13 +7,17 @@ namespace Techno
     {
         #region Inspector
         [SerializeField]
-        private ObservableVariableVector3 m_LastNavigationRequest;
+        private ObservableVariablePositionAndRotation m_LastNavigationRequest;
         #endregion
 
         #region Event System Handlers
         public void OnPointerClick(PointerEventData eventData)
         {
-            m_LastNavigationRequest.Value = eventData.pointerCurrentRaycast.worldPosition;
+            Debug.Log("NAV");
+            PositionAndRotation positionAndRotation = new();
+            positionAndRotation.Position = eventData.pointerCurrentRaycast.worldPosition;
+            positionAndRotation.Rotation = Quaternion.identity;
+            m_LastNavigationRequest.Value = positionAndRotation;
         }
         #endregion
     }
