@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxFlags: 0
   InitialConversationPool: 1
-  DatabasePath: 
-  DatabaseVersion: 
+  DatabasePath: C:/Users/emful/Desktop/DATABASE/TI/TechnoInfiernoDialogue.db
+  DatabaseVersion: 0.0.0
   RoutinePath: D:/Work/scratch/IsoMovementTest/Assets/GameScript
   ConversationDataPath: D:/Work/scratch/IsoMovementTest/Assets/StreamingAssets/GameScript
   ConversationDataPathRelative: /GameScript

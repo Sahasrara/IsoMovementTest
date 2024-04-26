@@ -1,7 +1,6 @@
 namespace Techno
 {
-    /**Base class for actions invokable by triggers and hotspots */
-    public abstract class ActionBase
+    public interface IAction
     {
         public abstract void Execute();
     }

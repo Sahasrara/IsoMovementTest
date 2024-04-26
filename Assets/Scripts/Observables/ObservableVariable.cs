@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Techno
@@ -7,6 +8,18 @@ namespace Techno
         #region State
         [SerializeField]
         private T m_Value;
+        #endregion
+
+        #region Editor
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            if (Application.isPlaying)
+            {
+                UnityEditor.EditorApplication.delayCall += Notify;
+            }
+        }
+#endif
         #endregion
 
         #region API

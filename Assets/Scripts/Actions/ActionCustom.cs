@@ -1,17 +1,19 @@
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace Techno
 {
-    public class ActionCustom : ActionBase
+    [Serializable]
+    public class ActionCustom : IAction
     {
         #region Inspector
         [SerializeField]
-        private UnityAction m_CustomAction;
+        private UnityEvent m_CustomAction;
         #endregion
 
         #region API
-        public override void Execute() => m_CustomAction?.Invoke();
+        public void Execute() => m_CustomAction?.Invoke();
         #endregion
     }
 }

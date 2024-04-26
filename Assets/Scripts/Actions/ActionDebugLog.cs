@@ -1,8 +1,10 @@
+using System;
 using UnityEngine;
 
 namespace Techno
 {
-    public class ActionDebugLog : ActionBase
+    [Serializable]
+    public class ActionDebugLog : IAction
     {
         #region Inspector
         [SerializeField]
@@ -10,7 +12,7 @@ namespace Techno
         #endregion
 
         #region API
-        public override void Execute() => Debug.Log(m_TextToLog);
+        public void Execute() => Debug.Log(m_TextToLog);
         #endregion
     }
 }

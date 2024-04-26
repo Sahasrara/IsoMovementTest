@@ -1,4 +1,6 @@
+using System;
 using Cysharp.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -20,14 +22,12 @@ namespace Techno
         private float m_TurnSpeed = 0.1f;
 
         [SerializeField]
-        private ObservableVariablePositionAndRotation m_LastNavigationRequest;
+        private ObservableVariableNavigationRequest m_LastNavigationRequest;
         #endregion
 
         #region State
         private NavAgentState m_NavState = NavAgentState.Idle;
-        private bool m_PathPending;
-        private bool m_PathRunning;
-        private PositionAndRotation m_LastDestination;
+        private NavigationRequest m_LastDestination;
         #endregion
 
         #region Unity Lifecycle Methods
@@ -76,12 +76,10 @@ namespace Techno
                     }
                     break;
                 case NavAgentState.Running:
-                    if (!m_Agent.hasPath)
+                    if (m_Agent.remainingDistance <= m_Agent.stoppingDistance)
                     {
-                        if (m_Agent.remainingDistance == 0)
-                        {
-                            TurnOnArrive().Forget();
-                        }
+                        m_Agent.ResetPath();
+                        TurnOnArrive().Forget();
                     }
                     break;
             }
@@ -95,7 +93,7 @@ namespace Techno
 
                 // // Calculate world delta position
                 // Vector3 projectedTarget = Vector3.ProjectOnPlane(
-                //     (m_Agent.steeringTarget - transform.position).normalized,
+                //     (m_Agent.steeringTarget - trasform.position).normalized,
                 //     Vector3.up
                 // );
                 // Vector3 projectedCurrent = Vector3.ProjectOnPlane(transform.forward, Vector3.up);
@@ -134,8 +132,10 @@ namespace Techno
                 m_Agent.SetDestination(m_LastDestination.Position);
                 m_NavState = NavAgentState.Calculating;
             }
-            // TODO = don't use identity checks
-            else if (m_LastDestination.Rotation != transform.rotation)
+            else if (
+                m_LastDestination.WithRotation
+                && m_LastDestination.Rotation != transform.rotation
+            )
             {
                 TurnOnArrive().Forget();
             }
@@ -143,13 +143,9 @@ namespace Techno
 
         private async UniTaskVoid TurnOnArrive()
         {
-            Debug.Log("ROTATING");
+            if (!m_LastDestination.WithRotation)
+                goto BecomeIdle;
             m_NavState = NavAgentState.Turning;
-            if (m_LastDestination.Rotation == Quaternion.identity)
-            {
-                m_NavState = NavAgentState.Idle;
-                return;
-            }
             float timeCount = 0.0f;
             float normalizedProgress;
             Quaternion startRotation = transform.rotation;
@@ -166,7 +162,10 @@ namespace Techno
                     return;
                 timeCount += Time.deltaTime;
             } while (normalizedProgress < 1);
+
+            BecomeIdle:
             m_NavState = NavAgentState.Idle;
+            m_LastDestination.SuccessListener?.OnNavigationSuccess();
         }
         #endregion
 

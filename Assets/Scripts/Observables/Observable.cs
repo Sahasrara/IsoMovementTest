@@ -8,6 +8,9 @@ namespace Techno
         #region Inspector
         [SerializeField]
         private string m_DeveloperNotes;
+
+        [SerializeField]
+        private bool m_FireOnRegister;
         #endregion
 
         #region State
@@ -23,6 +26,8 @@ namespace Techno
         public void RegisterListener(Action listener)
         {
             m_OnNotify += listener;
+            if (m_FireOnRegister)
+                listener();
         }
 
         public void UnregisterListener(Action listener)

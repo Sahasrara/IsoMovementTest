@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 
 namespace Techno
 {
-    public class Hotspot : MonoBehaviour, IPointerClickHandler
+    public class Hotspot : MonoBehaviour, IPointerClickHandler, INavigationSuccessListener
     {
         #region Inspector
         [SerializeField]
@@ -14,7 +14,7 @@ namespace Techno
         private LocalizationReference m_LabelTextId;
 
         [SerializeField]
-        private Marker m_CenterMarker;
+        private HotspotLabel m_Label;
 
         [SerializeField]
         private Marker m_ApproachMarker;
@@ -26,24 +26,101 @@ namespace Techno
         private Collider m_InteractionBoundary;
 
         [SerializeField]
-        private ObservableVariablePositionAndRotation m_LastNavigationRequest;
+        private ObservableVariableNavigationRequest m_LastNavigationRequest;
 
         [SerializeField]
-        private ActionBase[] m_ActionList;
+        private ObservableEvent m_OnLocaleChanged;
+
+        [SerializeReference, SubclassSelector]
+        private IAction[] m_ActionList;
+        #endregion
+
+        #region State
+        private Localization m_LocalizedLabelText;
+        private bool m_InBoundary;
         #endregion
 
         #region Event System Events
         public void OnPointerClick(PointerEventData eventData)
         {
-            Debug.Log("HOTSPOT");
-            PositionAndRotation positionAndRotation = new();
-            positionAndRotation.Position = m_ApproachMarker.transform.position;
-            positionAndRotation.Rotation = m_ApproachMarker.transform.rotation;
-            m_LastNavigationRequest.Value = positionAndRotation;
+            // Ignore if inactive
+            if (!m_IsHotspotActive.Value)
+                return;
 
-            // TODO
-            // Add in direction to this observable
-            // add in observable for when the character has arrived OR create an event bus
+            NavigationRequest navigationRequest =
+                new()
+                {
+                    Position = m_ApproachMarker.transform.position,
+                    Rotation = m_ApproachMarker.transform.rotation,
+                    WithRotation = true,
+                    SuccessListener = this,
+                };
+            m_LastNavigationRequest.Value = navigationRequest;
+        }
+        #endregion
+
+        #region Unity Lifecycle Methods
+        private void Awake()
+        {
+            m_LocalizedLabelText = Database.FindLocalization(m_LabelTextId.Id);
+            m_IsHotspotActive.RegisterListener(OnActiveChanged);
+            m_OnLocaleChanged.RegisterListener(OnTextChanged);
+            m_Label.SetFocus(false);
+            m_Label.SetActive(false);
+        }
+
+        private void OnDestroy()
+        {
+            m_IsHotspotActive.UnregisterListener(OnActiveChanged);
+            m_OnLocaleChanged.UnregisterListener(OnTextChanged);
+        }
+        #endregion
+
+        #region Child Events
+        public void OnClickableEnter()
+        {
+            m_Label.SetFocus(true);
+        }
+
+        public void OnClickableExit()
+        {
+            m_Label.SetFocus(false);
+        }
+
+        public void OnBoundaryEnter()
+        {
+            m_InBoundary = true;
+            OnActiveChanged();
+        }
+
+        public void OnBoundaryExit()
+        {
+            m_InBoundary = false;
+            OnActiveChanged();
+        }
+        #endregion
+
+        #region Helpers
+        private void OnActiveChanged()
+        {
+            m_Label.SetActive(m_IsHotspotActive.Value && m_InBoundary);
+        }
+
+        private void OnTextChanged()
+        {
+            // TODO fetch locale from wherever it's stored
+            m_Label.SetText(m_LocalizedLabelText.GetLocalization(Database.Instance.Locales[0]));
+        }
+
+        public void OnNavigationSuccess()
+        {
+            if (m_ActionList != null)
+            {
+                for (int i = 0; i < m_ActionList.Length; i++)
+                {
+                    m_ActionList[i].Execute();
+                }
+            }
         }
         #endregion
     }
