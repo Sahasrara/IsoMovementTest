@@ -1,6 +1,3 @@
-using System;
-using Cysharp.Threading.Tasks;
-using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -79,7 +76,7 @@ namespace Techno
                     if (m_Agent.remainingDistance <= m_Agent.stoppingDistance)
                     {
                         m_Agent.ResetPath();
-                        TurnOnArrive().Forget();
+                        _ = TurnOnArrive();
                     }
                     break;
             }
@@ -137,11 +134,11 @@ namespace Techno
                 && m_LastDestination.Rotation != transform.rotation
             )
             {
-                TurnOnArrive().Forget();
+                _ = TurnOnArrive();
             }
         }
 
-        private async UniTaskVoid TurnOnArrive()
+        private async Awaitable TurnOnArrive()
         {
             if (!m_LastDestination.WithRotation)
                 goto BecomeIdle;
@@ -157,7 +154,7 @@ namespace Techno
                     m_LastDestination.Rotation,
                     normalizedProgress
                 );
-                await UniTask.Yield(PlayerLoopTiming.Update);
+                await Awaitable.NextFrameAsync();
                 if (m_NavState != NavAgentState.Turning)
                     return;
                 timeCount += Time.deltaTime;

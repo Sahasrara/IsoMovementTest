@@ -1,12 +1,5 @@
 {
   "dependencies": {
-    "com.cysharp.unitask": {
-      "version": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {},
-      "hash": "2e225fb8414e023df2aa3acae2ef225471981316"
-    },
     "com.mackysoft.serializereference-extensions": {
       "version": "https://github.com/mackysoft/Unity-SerializeReferenceExtensions.git?path=Assets/MackySoft/MackySoft.SerializeReferenceExtensions",
       "depth": 0,
@@ -68,7 +61,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.rider": {
-      "version": "3.0.27",
+      "version": "3.0.28",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -192,11 +185,11 @@
       "url": "https://packages.unity.com"
     },
     "studio.shortsleeve.gamescriptunity": {
-      "version": "https://github.com/ShortSleeveStudio/GameScriptUnity.git?path=/Packages/studio.shortsleeve.gamescriptunity#v0.0.2",
+      "version": "https://github.com/ShortSleeveStudio/GameScriptUnity.git?path=/Packages/studio.shortsleeve.gamescriptunity#v0.0.3",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "da7afa4fd9f29f2e4f1c2a35c1a8d1fcb1eba68a"
+      "hash": "df84ad72c7ea9e1d714a72ff8e84e325cb1f194d"
     },
     "com.unity.modules.accessibility": {
       "version": "1.0.0",
