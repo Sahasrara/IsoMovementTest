@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 84d61391be03f5149899e1c8289c41bc, type: 3}
-  m_Name: IsSphereActive
+  m_Name: IsTriggerActive
   m_EditorClassIdentifier: 
   m_DeveloperNotes: 
   m_FireOnRegister: 1

@@ -44,7 +44,7 @@ namespace Techno
         public void OnPointerClick(PointerEventData eventData)
         {
             // Ignore if inactive
-            if (!m_IsHotspotActive.Value)
+            if (!IsHotspotActive())
                 return;
 
             NavigationRequest navigationRequest =
@@ -63,7 +63,8 @@ namespace Techno
         private void Awake()
         {
             m_LocalizedLabelText = Database.FindLocalization(m_LabelTextId.Id);
-            m_IsHotspotActive.RegisterListener(OnActiveChanged);
+            if (m_IsHotspotActive != null)
+                m_IsHotspotActive.RegisterListener(OnActiveChanged);
             m_OnLocaleChanged.RegisterListener(OnTextChanged);
             m_Label.SetFocus(false);
             m_Label.SetActive(false);
@@ -71,7 +72,8 @@ namespace Techno
 
         private void OnDestroy()
         {
-            m_IsHotspotActive.UnregisterListener(OnActiveChanged);
+            if (m_IsHotspotActive != null)
+                m_IsHotspotActive.UnregisterListener(OnActiveChanged);
             m_OnLocaleChanged.UnregisterListener(OnTextChanged);
         }
         #endregion
@@ -103,7 +105,7 @@ namespace Techno
         #region Helpers
         private void OnActiveChanged()
         {
-            m_Label.SetActive(m_IsHotspotActive.Value && m_InBoundary);
+            m_Label.SetActive(IsHotspotActive() && m_InBoundary);
         }
 
         private void OnTextChanged()
@@ -122,6 +124,8 @@ namespace Techno
                 }
             }
         }
+
+        private bool IsHotspotActive() => m_IsHotspotActive != null && m_IsHotspotActive.Value;
         #endregion
     }
 }
